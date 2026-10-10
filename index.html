@@ -649,51 +649,6 @@
             }
         }
 
-        /* MUSIC GUIDE */
-        .music-guide {
-            position: fixed;
-            top: 78px;
-            right: 22px;
-            z-index: 9998;
-            max-width: 230px;
-            padding: 13px 17px;
-            border: 1px solid #ffffffcc;
-            border-radius: 17px;
-            background: #fffaf4eF;
-            color: #51445f;
-            box-shadow: 0 8px 25px #51445f15;
-            font-size: 12px;
-            animation: appear .5s ease both;
-        }
-
-        .music-guide-text {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .music-guide span {
-            color: #867990;
-        }
-
-        .music-guide.hide {
-            display: none;
-        }
-
-        @media (max-width: 600px) {
-            .music-btn {
-                top: 14px;
-                right: 14px;
-                width: 43px;
-                height: 43px;
-            }
-
-            .music-guide {
-                top: 66px;
-                right: 14px;
-                max-width: 210px;
-            }
-        }
 
         /* DARK MODE BUTTON */
         .theme-btn {
@@ -808,6 +763,23 @@
                 left: auto;
             }
         }
+
+        /* SMOOTH AUTO-HIDE BUTTONS */
+
+        .music-btn,
+        .theme-btn {
+            transition:
+                opacity 0.3s ease,
+                transform 0.3s ease,
+                background 0.25s ease;
+        }
+
+        .music-btn.buttons-hidden,
+        .theme-btn.buttons-hidden {
+            opacity: 0;
+            transform: translateY(-15px);
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -819,15 +791,7 @@
         🌙
     </button>
 
-    <!-- MUSIC GUIDE -->
-    <div class="music-guide" id="musicGuide">
-        <div class="music-guide-text">
-            <strong>redd please turn on the music ♫</strong>
-            <span>click the little button up there</span>
-        </div>
 
-
-    </div>
 
     <audio id="bgMusic" loop autoplay>
         <source src="./PerangTelahUsai.mp3" type="audio/mpeg">
@@ -847,7 +811,7 @@
                 <h1>How are you<br>feeling today?</h1>
                 <p class="intro">Hii redd! I made this little space just for you because I know it's not always easy
                     for you to talk about how you feel. I hope these little messages can help you feel a little better
-                    and remind you that someone is always willing to listen. 
+                    and remind you that someone is always willing to listen.
                     Choose the mood that feels closest to you
                     today. ♡</p>
                 <div class="moods">
@@ -999,7 +963,7 @@
 
         const bgMusic = document.getElementById("bgMusic");
         const musicButton = document.getElementById("musicButton");
-        const musicGuide = document.getElementById("musicGuide");
+
 
         bgMusic.volume = 0.5;
 
@@ -1011,9 +975,7 @@
                 isPlaying ? "Pause music" : "Play music"
             );
 
-            if (isPlaying) {
-                musicGuide.classList.add("hide");
-            }
+
         }
 
         async function toggleMusic() {
@@ -1168,6 +1130,42 @@
                 isDark ? "Turn off dark mode" : "Turn on dark mode"
             );
         }
+
+        /* AUTO HIDE BUTTONS WHEN SCROLLING */
+
+        const floatingButtons = [
+            document.getElementById("musicButton"),
+            document.getElementById("themeButton")
+        ];
+
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener("scroll", () => {
+            const currentScrollY = window.scrollY;
+
+            // Sembunyikan tombol saat scroll ke bawah
+            if (currentScrollY > lastScrollY && currentScrollY > 80) {
+                floatingButtons.forEach(button => {
+                    button.classList.add("buttons-hidden");
+                });
+            }
+            // Munculkan tombol saat scroll ke atas
+            else if (currentScrollY < lastScrollY) {
+                floatingButtons.forEach(button => {
+                    button.classList.remove("buttons-hidden");
+                });
+            }
+
+            // Tombol selalu muncul saat di posisi paling atas
+            if (currentScrollY <= 20) {
+                floatingButtons.forEach(button => {
+                    button.classList.remove("buttons-hidden");
+                });
+            }
+
+            lastScrollY = currentScrollY;
+        }, { passive: true });
+
 
     </script>
 </body>
