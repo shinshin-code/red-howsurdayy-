@@ -766,12 +766,14 @@
 
         /* SMOOTH AUTO-HIDE BUTTONS */
 
+
         .music-btn,
         .theme-btn {
             transition:
-                opacity 0.3s ease,
-                transform 0.3s ease,
+                opacity 0.12s ease,
+                transform 0.12s ease,
                 background 0.25s ease;
+
         }
 
         .music-btn.buttons-hidden,
@@ -1131,7 +1133,8 @@
             );
         }
 
-        /* AUTO HIDE BUTTONS WHEN SCROLLING */
+
+        /* AUTO HIDE BUTTONS QUICKLY */
 
         const floatingButtons = [
             document.getElementById("musicButton"),
@@ -1142,22 +1145,17 @@
 
         window.addEventListener("scroll", () => {
             const currentScrollY = window.scrollY;
+            const scrollDifference = currentScrollY - lastScrollY;
 
-            // Sembunyikan tombol saat scroll ke bawah
-            if (currentScrollY > lastScrollY && currentScrollY > 80) {
+            // Scroll sedikit ke bawah = langsung sembunyi
+            if (currentScrollY > 10 && scrollDifference > 0) {
                 floatingButtons.forEach(button => {
                     button.classList.add("buttons-hidden");
                 });
             }
-            // Munculkan tombol saat scroll ke atas
-            else if (currentScrollY < lastScrollY) {
-                floatingButtons.forEach(button => {
-                    button.classList.remove("buttons-hidden");
-                });
-            }
 
-            // Tombol selalu muncul saat di posisi paling atas
-            if (currentScrollY <= 20) {
+            // Scroll ke atas = langsung muncul
+            if (scrollDifference < 0 || currentScrollY <= 10) {
                 floatingButtons.forEach(button => {
                     button.classList.remove("buttons-hidden");
                 });
