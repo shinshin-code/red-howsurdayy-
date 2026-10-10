@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f8eef5">
+    <title>A Little Space for You ♡</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ink: #51445f;
+            --muted: #867990
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Nunito, sans-serif;
+            color: var(--ink);
+            background: #f8eef5
+        }
+
+        button {
+            font: inherit;
+            cursor: pointer
+        }
+
+        button:focus-visible {
+            outline: 3px solid #a88bc5;
+            outline-offset: 4px
+        }
+
+        .app {
+            position: relative;
+            isolation: isolate;
+            min-height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(145deg, #fff2f5, #f0eaff 58%, #e5f0ff);
+            transition: background 1s
+        }
+
+        .app[data-mood=tired] {
+            background: linear-gradient(145deg, #e9eaf6, #dce3f4, #f8e8ee)
+        }
+
+        .app[data-mood=sad] {
+            background: linear-gradient(145deg, #dce8f6, #cbd9ee, #eee7f6)
+        }
+
+        .app[data-mood=lonely] {
+            background: linear-gradient(145deg, #292c50, #494266, #796582);
+            color: #fff2f8
+        }
+
+        .app[data-mood=happy] {
+            background: linear-gradient(145deg, #fff2cf, #ffe6df, #dceece)
+        }
+
+        .app[data-mood=excited] {
+            background: linear-gradient(145deg, #fce4f1, #e8dfff, #d9eaff)
+        }
+
+        .decor {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none
+        }
+
+        .orb {
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: #fff5;
+            filter: blur(8px);
+            right: -90px;
+            top: 8%
+        }
+
+        .orb.two {
+            width: 190px;
+            height: 190px;
+            right: auto;
+            left: -75px;
+            top: auto;
+            bottom: 9%
+        }
+
+        .topbar {
+            max-width: 1050px;
+            margin: auto;
+            padding: 25px 25px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px
+        }
+
+        .brand {
+            font: 22px 'DM Serif Display', serif
+        }
+
+        .brand span {
+            color: #c37ea1
+        }
+
+        .top-note {
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: .7
+        }
+
+        main {
+            width: min(900px, 92%);
+            margin: auto;
+            padding: 65px 0 40px;
+            text-align: center
+        }
+
+        .view {
+            display: none
+        }
+
+        .view.active {
+            display: block;
+            animation: appear .55s ease both
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(12px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .eyebrow {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2.7px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 16px
+        }
+
+        h1,
+        h2 {
+            font-family: 'DM Serif Display', serif;
+            font-weight: 400;
+            letter-spacing: -.7px
+        }
+
+        h1 {
+            font-size: clamp(43px, 7vw, 70px);
+            line-height: 1.08;
+            margin: 0 auto;
+            max-width: 760px
+        }
+
+        .intro {
+            max-width: 480px;
+            margin: 18px auto 0;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.85
+        }
+
+        .moods {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 13px;
+            margin: 40px auto 0
+        }
+
+        .mood-card {
+            min-height: 145px;
+            padding: 19px 8px;
+            border: 1px solid #fffC;
+            border-radius: 24px;
+            background: #ffffffa8;
+            color: var(--ink);
+            box-shadow: 0 10px 35px #5943710d;
+            backdrop-filter: blur(12px);
+            transition: transform .25s, background .25s, box-shadow .25s
+        }
+
+        .mood-card:hover {
+            transform: translateY(-6px);
+            background: #fffffff0;
+            box-shadow: 0 16px 32px #5943711c
+        }
+
+        .mood-icon {
+            display: block;
+            font-size: 35px;
+            margin-bottom: 12px;
+            transition: transform .25s
+        }
+
+        .mood-card:hover .mood-icon {
+            transform: rotate(-8deg) scale(1.1)
+        }
+
+        .mood-name {
+            display: block;
+            font-size: 14px;
+            font-weight: 800
+        }
+
+        .mood-hint {
+            display: block;
+            margin-top: 5px;
+            font-size: 10px;
+            opacity: .7
+        }
+
+        .scene {
+            position: relative;
+            width: min(540px, 100%);
+            height: 220px;
+            margin: 30px auto 0;
+            border: 1px solid #fff8;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 18px 50px #3d315314;
+            background: #ffffff30
+        }
+
+        .scene-inner {
+            position: absolute;
+            inset: 0;
+            overflow: hidden
+        }
+
+        .cloud {
+            position: absolute;
+            width: 115px;
+            height: 38px;
+            border-radius: 50px;
+            background: #ffffffe0;
+            filter: drop-shadow(0 6px 5px #635b820f);
+            animation: drift 8s ease-in-out infinite alternate
+        }
+
+        .cloud:before,
+        .cloud:after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: inherit
+        }
+
+        .cloud:before {
+            width: 50px;
+            height: 50px;
+            left: 16px;
+            bottom: 5px
+        }
+
+        .cloud:after {
+            width: 63px;
+            height: 63px;
+            right: 14px;
+            bottom: 0
+        }
+
+        .cloud.a {
+            top: 43px;
+            left: 10%
+        }
+
+        .cloud.b {
+            top: 85px;
+            right: 8%;
+            transform: scale(.75);
+            animation-delay: -3s
+        }
+
+        @keyframes drift {
+            from {
+                translate: -10px 0
+            }
+
+            to {
+                translate: 17px 5px
+            }
+        }
+
+        .raindrop {
+            position: absolute;
+            width: 2px;
+            height: 16px;
+            border-radius: 5px;
+            background: #718bb5a8;
+            animation: rain 1s linear infinite
+        }
+
+        @keyframes rain {
+            from {
+                transform: translateY(-30px);
+                opacity: 0
+            }
+
+            25% {
+                opacity: 1
+            }
+
+            to {
+                transform: translateY(230px);
+                opacity: 0
+            }
+        }
+
+        .moon {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 65px;
+            filter: drop-shadow(0 0 18px #ffebab70);
+            animation: float 4s ease-in-out infinite
+        }
+
+        .star {
+            position: absolute;
+            color: #fff0b8;
+            animation: twinkle 2s ease-in-out infinite alternate
+        }
+
+        @keyframes twinkle {
+            from {
+                opacity: .35;
+                scale: .8
+            }
+
+            to {
+                opacity: 1;
+                scale: 1.2
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                translate: 0 0
+            }
+
+            50% {
+                translate: 0 -8px
+            }
+        }
+
+        .sun {
+            position: absolute;
+            top: 23px;
+            right: 18%;
+            font-size: 66px;
+            animation: float 4s ease-in-out infinite
+        }
+
+        .hill {
+            position: absolute;
+            width: 120%;
+            height: 145px;
+            left: -10%;
+            bottom: -75px;
+            border-radius: 50% 50% 0 0;
+            background: #a9c99a
+        }
+
+        .hill.back {
+            left: -30%;
+            bottom: -55px;
+            background: #bdd4a8
+        }
+
+        .flower {
+            position: absolute;
+            bottom: 45px;
+            font-size: 27px;
+            animation: sway 2.5s ease-in-out infinite alternate
+        }
+
+        @keyframes sway {
+            from {
+                transform: rotate(-8deg)
+            }
+
+            to {
+                transform: rotate(8deg)
+            }
+        }
+
+        .rainbow {
+            position: absolute;
+            width: 175px;
+            height: 175px;
+            left: 50%;
+            top: 43px;
+            transform: translateX(-50%);
+            border-radius: 100px 100px 0 0;
+            border: 15px solid #f6a9c7;
+            border-bottom: 0;
+            opacity: .9
+        }
+
+        .rainbow:before {
+            content: "";
+            position: absolute;
+            inset: 10px;
+            border: 12px solid #bba6ef;
+            border-bottom: 0;
+            border-radius: 100px 100px 0 0
+        }
+
+        .sparkle {
+            position: absolute;
+            font-size: 28px;
+            animation: float 2s ease-in-out infinite
+        }
+
+        .scene-caption {
+            position: absolute;
+            bottom: 14px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: .7
+        }
+
+        .message-card {
+            width: min(540px, 100%);
+            margin: 23px auto 0;
+            padding: 29px 27px;
+            border: 1px solid #fffC;
+            border-radius: 25px;
+            background: #ffffffa8;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 12px 35px #45365e0f
+        }
+
+        .message-label {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: .7
+        }
+
+        .message-card h2 {
+            font-size: clamp(25px, 4vw, 34px);
+            margin: 11px 0 0
+        }
+
+        .message-card p {
+            max-width: 420px;
+            margin: 12px auto 0;
+            font-size: 15px;
+            line-height: 1.9;
+            color: var(--muted)
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 22px
+        }
+
+        .btn {
+            border: 1px solid #fff;
+            border-radius: 30px;
+            padding: 12px 18px;
+            background: #ffffffb8;
+            color: var(--ink);
+            font-weight: 800;
+            font-size: 12px;
+            transition: transform .2s, background .2s
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            background: white
+        }
+
+        .btn.primary {
+            background: #655678;
+            color: white;
+            border-color: transparent
+        }
+
+        .btn.primary:hover {
+            background: #514363
+        }
+
+        footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 11px;
+            color: var(--muted);
+            opacity: .85
+        }
+
+        .app[data-mood=lonely] .eyebrow,
+        .app[data-mood=lonely] .intro,
+        .app[data-mood=lonely] .message-card p,
+        .app[data-mood=lonely] footer {
+            color: #e6d8ef
+        }
+
+        .app[data-mood=lonely] .message-card {
+            background: #ffffff12;
+            border-color: #ffffff26
+        }
+
+        .app[data-mood=lonely] .btn {
+            background: #ffffff1e;
+            color: white;
+            border-color: #ffffff25
+        }
+
+        .app[data-mood=lonely] .btn.primary {
+            background: #e4bfd9;
+            color: #40314f
+        }
+
+        @media(max-width:700px) {
+            .topbar {
+                padding: 21px 18px 0
+            }
+
+            .brand {
+                font-size: 18px
+            }
+
+            .top-note {
+                font-size: 9px;
+                letter-spacing: .8px
+            }
+
+            main {
+                padding-top: 58px
+            }
+
+            .moods {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+                margin-top: 29px
+            }
+
+            .mood-card {
+                min-height: 112px;
+                padding: 14px 8px
+            }
+
+            .mood-card:last-child {
+                grid-column: 1/-1;
+                min-height: 98px
+            }
+
+            .mood-icon {
+                font-size: 30px;
+                margin-bottom: 7px
+            }
+
+            .scene {
+                height: 200px;
+                margin-top: 25px
+            }
+
+            .message-card {
+                padding: 25px 18px
+            }
+
+            .intro {
+                font-size: 14px
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+
+            *,
+            *:before,
+            *:after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important
+            }
+        }
+
+        /* MUSIC BUTTON */
+        .music-btn {
+            position: fixed;
+            top: 22px;
+            right: 22px;
+            z-index: 9999;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ffffffcc;
+            border-radius: 50%;
+            background: #ffffffc9;
+            color: #51445f;
+            font-size: 21px;
+            box-shadow: 0 5px 20px #51445f20;
+            backdrop-filter: blur(12px);
+            transition: transform .25s, background .25s;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.08);
+            background: white;
+        }
+
+        .music-btn.playing {
+            animation: musicPulse 1.8s ease-in-out infinite;
+        }
+
+        @keyframes musicPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 5px 20px #51445f20;
+            }
+
+            50% {
+                box-shadow: 0 5px 24px #c37ea155;
+            }
+        }
+
+        /* MUSIC GUIDE */
+        .music-guide {
+            position: fixed;
+            top: 78px;
+            right: 22px;
+            z-index: 9998;
+            max-width: 230px;
+            padding: 13px 17px;
+            border: 1px solid #ffffffcc;
+            border-radius: 17px;
+            background: #fffaf4eF;
+            color: #51445f;
+            box-shadow: 0 8px 25px #51445f15;
+            font-size: 12px;
+            animation: appear .5s ease both;
+        }
+
+        .music-guide-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .music-guide span {
+            color: #867990;
+        }
+
+        .music-guide.hide {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .music-btn {
+                top: 14px;
+                right: 14px;
+                width: 43px;
+                height: 43px;
+            }
+
+            .music-guide {
+                top: 66px;
+                right: 14px;
+                max-width: 210px;
+            }
+        }
+
+        /* DARK MODE BUTTON */
+        .theme-btn {
+            position: fixed;
+            top: 22px;
+            right: 80px;
+            z-index: 9999;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ffffffcc;
+            border-radius: 50%;
+            background: #ffffffc9;
+            color: #51445f;
+            font-size: 21px;
+            box-shadow: 0 5px 20px #51445f20;
+            backdrop-filter: blur(12px);
+            transition: transform .25s, background .25s;
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.08);
+        }
+
+        /* DARK MODE APPEARANCE */
+        .app.dark-mode {
+            background: linear-gradient(145deg, #171725, #252238 58%, #30283d);
+            color: #f5edf8;
+        }
+
+        .app.dark-mode .eyebrow,
+        .app.dark-mode .intro,
+        .app.dark-mode footer {
+            color: #c9bdd6;
+        }
+
+        .app.dark-mode .mood-card,
+        .app.dark-mode .message-card {
+            background: #ffffff0d;
+            color: #f5edf8;
+            border-color: #ffffff20;
+            box-shadow: 0 10px 35px #00000020;
+        }
+
+        .app.dark-mode .mood-card:hover {
+            background: #ffffff18;
+        }
+
+        .app.dark-mode .message-card p {
+            color: #d2c6df;
+        }
+
+        .app.dark-mode .btn {
+            background: #ffffff12;
+            color: #f5edf8;
+            border-color: #ffffff25;
+        }
+
+        .app.dark-mode .btn:hover {
+            background: #ffffff25;
+        }
+
+        .app.dark-mode .btn.primary {
+            background: #b9a1d2;
+            color: #211a30;
+        }
+
+        .app.dark-mode .scene {
+            border-color: #ffffff25;
+            background-color: #ffffff08;
+        }
+
+        @media (max-width: 600px) {
+            .theme-btn {
+                top: 14px;
+                right: 65px;
+                width: 43px;
+                height: 43px;
+            }
+        }
+
+        /* MUSIC BUTTON: KIRI */
+        .music-btn {
+            position: fixed;
+            top: 22px;
+            left: 22px;
+            right: auto;
+            z-index: 9999;
+        }
+
+        /* DARK MODE BUTTON: KANAN */
+        .theme-btn {
+            position: fixed;
+            top: 22px;
+            right: 22px;
+            left: auto;
+            z-index: 9999;
+        }
+
+        @media (max-width: 600px) {
+            .music-btn {
+                top: 14px;
+                left: 14px;
+                right: auto;
+            }
+
+            .theme-btn {
+                top: 14px;
+                right: 14px;
+                left: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <button class="music-btn" id="musicButton" onclick="toggleMusic()">
+        🎵
+    </button>
+    <button class="theme-btn" id="themeButton" onclick="toggleDarkMode()" aria-label="Turn on dark mode">
+        🌙
+    </button>
+
+    <!-- MUSIC GUIDE -->
+    <div class="music-guide" id="musicGuide">
+        <div class="music-guide-text">
+            <strong>redd please turn on the music ♫</strong>
+            <span>click the little button up there</span>
+        </div>
+
+
+    </div>
+
+    <audio id="bgMusic" loop autoplay>
+        <source src="./PerangTelahUsai.mp3" type="audio/mpeg">
+    </audio>
+    <div class="app" id="app" data-mood="start">
+        <div class="decor">
+            <div class="orb"></div>
+            <div class="orb two"></div>
+        </div>
+        <header class="topbar">
+            <div class="brand">little space <span>♡</span></div>
+            <div class="top-note">a little place made for redd</div>
+        </header>
+        <main>
+            <section class="view active" id="home">
+                <div class="eyebrow">a small check-in with yourself</div>
+                <h1>How are you<br>feeling today?</h1>
+                <p class="intro">Hii redd! I made this little space just for you because I know it's not always easy
+                    for you to talk about how you feel. I hope these little messages can help you feel a little better
+                    and remind you that someone is always willing to listen. 
+                    Choose the mood that feels closest to you
+                    today. ♡</p>
+                <div class="moods">
+                    <button class="mood-card" data-choice="tired"><span class="mood-icon">☁️</span><span
+                            class="mood-name">tired</span><span class="mood-hint">need a little rest</span></button>
+                    <button class="mood-card" data-choice="sad"><span class="mood-icon">🌧️</span><span
+                            class="mood-name">sad</span><span class="mood-hint">need some comfort</span></button>
+                    <button class="mood-card" data-choice="lonely"><span class="mood-icon">🌙</span><span
+                            class="mood-name">lonely</span><span class="mood-hint">need a little company</span></button>
+                    <button class="mood-card" data-choice="happy"><span class="mood-icon">☀️</span><span
+                            class="mood-name">happy</span><span class="mood-hint">feeling good</span></button>
+                    <button class="mood-card" data-choice="excited"><span class="mood-icon">✨</span><span
+                            class="mood-name">excited</span><span class="mood-hint">something to look forward
+                            to</span></button>
+                </div>
+            </section>
+            <section class="view" id="result" aria-live="polite">
+                <div class="eyebrow" id="eyebrow"></div>
+                <h1 id="heading"></h1>
+                <p class="intro" id="intro"></p>
+                <div class="scene">
+                    <div class="scene-inner" id="scene"></div>
+                </div>
+                <div class="message-card">
+                    <div class="message-label">a little note, just for you ♡</div>
+                    <h2 id="messageTitle"></h2>
+                    <p id="messageText"></p>
+                    <div class="actions"><button class="btn" id="another">another little reminder ↻</button><button
+                            class="btn primary" id="back">← choose another mood</button></div>
+                </div>
+            </section>
+        </main>
+        <footer>someone thought you deserved a little kindness today ♡</footer>
+    </div>
+    <script>
+        const app = document.getElementById('app'), home = document.getElementById('home'), result = document.getElementById('result'), scene = document.getElementById('scene');
+
+        let currentMood = '', messageIndex = -1;
+        let lastMessages = {};
+
+
+        const moods = {
+
+            tired: {
+                eyebrow: 'you can take it slow',
+                heading: 'Take a little breath.',
+                intro: 'heyy redd, udah capek banget ya hari ini?',
+                title: 'You deserve some rest.',
+                messages: [
+                    'heyy redd, how was your day? capek banget yaa?.. i know you work really hard, sometimes berangkat subuh and coming home when its already midnight. honestly, i really appreciate how hard you work every day. i hope you know that. but please take care of yourself too, okay? jangan sampai terlalu sibuk dan lupa istirahatt.',
+
+                    'redd, you dont have to do everything in one day. i know there are a lot of things you need to do, but please dont be too hard on yourself. kalau hari ini kamu capek banget, ya istirahat dulu. you can continue tomorrow. the world wont end just because you take a little break, i promise.',
+
+                    'imagine youre sitting somewhere cozy right now, with a cup of coffee and your favorite lana del rey song playing in the background. no work, no problems to think about, just you enjoying a little peace. sounds nice, right? i hope you get moments like that more often redd. you really deserve it.',
+
+                    'sometimes i wonder if you realize how hard youve been trying all this time. mungkin kamu ngerasa itu semua hal biasa, but i notice how much effort you put into your work. and i really respect that about you. even if things dont always go as planned, please dont think all your effort means nothing. im proud of you redd. always.',
+
+                    'okay redd, this is your reminder to drink some water, eat something, and get enough rest. YES, im telling you to eat properly HAHAHA. kamu boleh kerja keras, but dont forget that your body needs a break too. i hope tomorrow feels a little easier for you. for now, just rest, okay?'
+                ]
+            },
+
+            sad: {
+                eyebrow: 'its okay to have bad days',
+                heading: 'Hey, are you okay?',
+                intro: 'you dont have to pretend to be okay here, redd.',
+                title: 'Its okay, take your time.',
+                messages: [
+                    'redd, i dont know what happened today, but if youre having a bad day, im sorry.. sometimes life gets really tiring, and things dont always happen the way we want them to. kalau hari ini semuanya lagii berantakan, you dont have to fix everything right now. take a breath first, okay? one bad day is just one bad day.',
+
+                    'hey, please dont think youre not good enough just because things are difficult right now. i know life can be frustrating, especially when you try your best but things still dont go the way you want. but that doesnt mean youre doing everything wrong. kamu juga manusia kokk redd. wajar kalau ada hari ketika kamu ngerasa capek, sedih, atau kecewa.',
+
+                    'if you feel like doing nothing today, thats okay. you dont have to force yourself to smile or act like everything is fine. maybe get your favorite coffee, listen to lana, or just sit quietly for a while. you dont need to explain your feelings to anyone if youre not ready. just be kind to yourself today, okay?',
+
+                    'redd, i wish you could be a little kinder to yourself. sometimes we can be so hard on ourselves that we forget all the things we have already done. mungkin kamu masih punya banyak hal yang ingin dicapai, and thats okay. but please dont let the things you havent done make you forget how far youve come.',
+
+                    'i know i cant make all your problems disappear, and i wont pretend that i understand everything youre going through. but i really hope things get better for you. kalau sekarang masih berat, its okay to take things slowly. you dont need to have all the answers today. just get through today first, redd. thats enough for now.'
+                ]
+            },
+
+            lonely: {
+                eyebrow: 'a little message from tia',
+                heading: 'Hey redd, you matter.',
+                intro: 'just in case you need a little reminder today.',
+                title: 'You are important too.',
+                messages: [
+                    'redd, can i tell you something? you dont have to be someone special, successful, or useful to everyone just to be important. kamu nggak harus selalu punya sesuatu untuk ditunjukkan ke orang lain. you can have an ordinary day, do ordinary things, and still be someone worth knowing. i hope you remember that, even when its hard to believe.',
+
+                    'i dont know if you ever feel like youre just existing without really feeling alive, but if you do, i hope things get better for you. i hope you find little things that make your days feel less empty. maybe its a good song, a nice cup of coffee, your favorite food, or just a moment when you can finally relax. it doesnt have to be something big, redd.',
+
+                    'you know what? i really love your red hair. HAHAHA, okay, maybe you already know that, but im saying it again. theres just something about it that i really like. and its not only your hair, btw. i like the little things about you too. mungkin kamu sendiri nggak terlalu mikirin hal-hal itu, but i do notice them. so please dont think theres nothing about you worth appreciating.',
+
+                    'redd, you dont always have to be the person who has everything under control. you dont have to hide every bad feeling or deal with everything alone. and if you prefer to keep things to yourself sometimes, thats okay too. im not asking you to tell me everything. i just hope you know that your feelings matter, even when you dont talk about them.',
+
+                    'if youre reading this late at night, maybe after a long day at work, i hope youre somewhere comfortable right now. maybe listening to lana, scrolling through your phone, or just enjoying the quiet. i hope you can put all your worries aside for a little while. and redd, if nobody has told you this today, im glad you exist. thats all. from tia ♡'
+                ]
+            },
+
+            happy: {
+                eyebrow: 'look whos having a good day',
+                heading: 'You seem happy today!',
+                intro: 'heyyy redd, i hope i get to see more days like this for you.',
+                title: 'Please enjoy your day.',
+                messages: [
+                    'HEYYY REDD, youre having a good day?? THATS NICEE HAHAHA. whatever made you happy today, i hope you get more of it. you spend so much time working and dealing with your daily life, so its nice to know that you get to enjoy yourself too. have fun today, okay? dont overthink things too much.',
+
+                    'i hope you get to eat something good today. maybe mie ayam, dimsum, or literally anything youve been craving lately. terus minum kopi favorit kamu sambil dengerin lagu yang kamu suka. honestly, that sounds like a pretty good day to me. sometimes happiness is just about enjoying small things, and i hope you get a lot of those moments.',
+
+                    'not to be weird, but knowing that youre happy makes me happy too. HAHAHA, okay, that sounded a little cheesy, but its true. i just hope life gives you more reasons to smile and more days when you dont have to worry about so many things. you deserve to enjoy your life too, redd.',
+
+                    'if something good happened today, PLEASE LET YOURSELF ENJOY IT. dont ruin the moment by thinking about everything that could go wrong tomorrow. i know its not always easy to stop overthinking, but you can enjoy the good things while theyre here. hari ini lagi baik sama kamu, so let yourself have a good day, okay?',
+
+                    'i hope you know that you dont have to be productive every second to have a good day. maybe today you just ate something delicious, listened to good music, laughed at something random, or got to spend time doing what you like. thats good too, redd. life isnt only about work and responsibilities. theres so much more for you to enjoy.'
+                ]
+            },
+
+            excited: {
+                eyebrow: 'something to look forward to',
+                heading: 'Wait, whats happening?',
+                intro: 'heyy redd, you have something exciting going on?',
+                title: 'I hope it goes well!',
+                messages: [
+                    'WAITTT REDD, WHAT ARE YOU EXCITED ABOUT? HAHAHA. okay, you dont have to tell me if you dont want to, but i hope whatever it is goes well. i hope you get the thing youve been waiting for, and i hope it makes you really happy. im rooting for you, okay?',
+
+                    'its nice to have something to look forward to, isnt it? something that makes an ordinary day feel a little more interesting. i hope you get more moments like this, redd. not just days filled with work and responsibilities, but days when you actually feel excited about something in your life.',
+
+                    'whatever youre planning or waiting for, i hope you dont spend the whole time worrying about what might go wrong. i know its easier said than done, but try to enjoy the moment too. you dont have to know exactly how everything will turn out. just let yourself be excited for now, okay?',
+
+                    'i hope things work out the way you want them to. but if they dont, please dont think that everything is ruined. sometimes things happen differently from what we expected, and thats okay. you can always figure things out one step at a time. for now, i hope you get to enjoy this feeling without worrying too much.',
+
+                    'redd, i hope your future has a lot of things that make you excited to wake up in the morning. little plans, new experiences, good food, your favorite music, and things that make you think, "hey, i actually wanna see what happens next." you deserve to have things to look forward to. and for whatever youre excited about right now, good luckkk! im cheering for you from here. ♡'
+                ]
+            }
+
+        };
+
+        function getRandomMessage(mood) {
+            const messages = moods[mood].messages;
+            let available = messages
+                .map((_, index) => index)
+                .filter(index => index !== lastMessages[mood]);
+
+            const randomIndex =
+                available[Math.floor(Math.random() * available.length)];
+
+            lastMessages[mood] = randomIndex;
+            return randomIndex;
+        }
+
+
+        const bgMusic = document.getElementById("bgMusic");
+        const musicButton = document.getElementById("musicButton");
+        const musicGuide = document.getElementById("musicGuide");
+
+        bgMusic.volume = 0.5;
+
+        function updateMusicButton(isPlaying) {
+            musicButton.textContent = isPlaying ? "🎵" : "🔇";
+            musicButton.classList.toggle("playing", isPlaying);
+            musicButton.setAttribute(
+                "aria-label",
+                isPlaying ? "Pause music" : "Play music"
+            );
+
+            if (isPlaying) {
+                musicGuide.classList.add("hide");
+            }
+        }
+
+        async function toggleMusic() {
+            if (bgMusic.paused) {
+                try {
+                    await bgMusic.play();
+                    updateMusicButton(true);
+                } catch (error) {
+                    musicButton.textContent = "▶️";
+                    console.log("Music couldn't play:", error);
+                }
+            } else {
+                bgMusic.pause();
+                updateMusicButton(false);
+            }
+        }
+
+        bgMusic.addEventListener("play", () => updateMusicButton(true));
+        bgMusic.addEventListener("pause", () => updateMusicButton(false));
+
+        updateMusicButton(false);
+
+        function el(tag, cls, text) { const n = document.createElement(tag); n.className = cls; if (text !== undefined) n.textContent = text; return n }
+        function clouds() { scene.append(el('div', 'cloud a'), el('div', 'cloud b')) }
+        function rain() { for (let i = 0; i < 36; i++) { const d = el('span', 'raindrop'); d.style.left = Math.random() * 100 + '%'; d.style.top = Math.random() * 100 + '%'; d.style.animationDelay = -Math.random() * 2 + 's'; d.style.animationDuration = (.7 + Math.random() * .7) + 's'; scene.appendChild(d) } }
+        function stars() { [[12, 22], [25, 58], [35, 15], [47, 43], [65, 20], [80, 51], [88, 27], [70, 75], [18, 76], [53, 68], [92, 65]].forEach(([x, y], i) => { const s = el('span', 'star', i % 3 === 0 ? '✦' : '✧'); s.style.left = x + '%'; s.style.top = y + '%'; s.style.fontSize = (12 + i % 3 * 5) + 'px'; s.style.animationDelay = i * .2 + 's'; scene.appendChild(s) }) }
+        function flowers() { scene.append(el('div', 'hill back'), el('div', 'hill'));[[12, '🌷'], [26, '🌼'], [42, '🌸'], [62, '🌼'], [80, '🌷'], [90, '🌸']].forEach(([x, e], i) => { const f = el('span', 'flower', e); f.style.left = x + '%'; f.style.bottom = (42 + i % 2 * 12) + 'px'; f.style.animationDelay = i * .25 + 's'; scene.appendChild(f) }) }
+        function sparkles() { [[12, 22, '✦'], [22, 56, '✧'], [78, 23, '✦'], [85, 57, '✧'], [68, 72, '✦'], [32, 28, '✧'], [52, 18, '✦'], [45, 67, '✧']].forEach(([x, y, t], i) => { const s = el('span', 'sparkle', t); s.style.left = x + '%'; s.style.top = y + '%'; s.style.animationDelay = i * .2 + 's'; scene.appendChild(s) }) }
+        function renderScene(mood) {
+            scene.replaceChildren();
+            if (mood === 'tired') { scene.style.background = 'linear-gradient(#d9deef,#f0dfe9)'; clouds(); scene.append(el('span', 'scene-caption', 'slow down · breathe · rest')) }
+            else if (mood === 'sad') { scene.style.background = 'linear-gradient(#b9cce5,#dce5f2)'; clouds(); rain(); scene.append(el('span', 'scene-caption', 'let the rain pass')) }
+            else if (mood === 'lonely') { scene.style.background = 'linear-gradient(#252747,#635776)'; scene.append(el('div', 'moon', '🌙')); stars(); scene.append(el('span', 'scene-caption', 'a quiet little universe')) }
+            else if (mood === 'happy') { scene.style.background = 'linear-gradient(#ffedc7,#f9d9d9)'; scene.append(el('div', 'sun', '☀️')); flowers(); scene.append(el('span', 'scene-caption', 'stay for the sunshine')) }
+            else { scene.style.background = 'linear-gradient(#f9d9eb,#ded9fa)'; scene.append(el('div', 'rainbow')); sparkles(); scene.append(el('span', 'scene-caption', 'good things are in the air')) }
+        }
+
+        function chooseMood(mood) {
+            const d = moods[mood];
+            if (!d) return;
+
+            currentMood = mood;
+            messageIndex = getRandomMessage(mood);
+            app.dataset.mood = mood;
+
+            document.getElementById('eyebrow').textContent = d.eyebrow;
+            document.getElementById('heading').textContent = d.heading;
+            document.getElementById('intro').textContent = d.intro;
+            document.getElementById('messageTitle').textContent = d.title;
+            document.getElementById('messageText').textContent =
+                d.messages[messageIndex];
+
+            renderScene(mood);
+
+            home.classList.remove('active');
+            result.classList.remove('active');
+
+            setTimeout(() => {
+                result.classList.add('active');
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }, 80);
+        }
+
+        document.getElementById('another').addEventListener('click', () => {
+            if (!currentMood) return;
+
+            const d = moods[currentMood];
+            const previousIndex = messageIndex;
+
+            messageIndex = getRandomMessage(currentMood);
+
+            // Hindari pesan yang sama dengan pesan sebelumnya
+            if (messageIndex === previousIndex && d.messages.length > 1) {
+                messageIndex = (messageIndex + 1) % d.messages.length;
+                lastMessages[currentMood] = messageIndex;
+            }
+
+            const p = document.getElementById('messageText');
+            p.textContent = d.messages[messageIndex];
+
+            p.animate(
+                [
+                    { opacity: 0, transform: 'translateY(6px)' },
+                    { opacity: 1, transform: 'translateY(0)' }
+                ],
+                {
+                    duration: 350,
+                    easing: 'ease-out'
+                }
+            );
+        });
+
+        document.querySelectorAll('[data-choice]').forEach(button => {
+            button.addEventListener('click', () => {
+                chooseMood(button.dataset.choice);
+            });
+        });
+
+        document.getElementById('back').addEventListener('click', () => {
+            result.classList.remove('active');
+            app.dataset.mood = 'start';
+
+            setTimeout(() => {
+                home.classList.add('active');
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }, 80);
+        });
+
+
+        /* =========================
+           MUSIC ON / OFF
+        ========================= */
+
+        function toggleMusic() {
+            const musicButton = document.getElementById("musicButton");
+            const musicGuide = document.getElementById("musicGuide");
+
+            if (bgMusic.paused) {
+
+                bgMusic.play().then(() => {
+                    musicButton.textContent = "🎵";
+
+                    // Hilangkan petunjuk
+                    musicGuide.classList.add("hide");
+
+                }).catch(() => { });
+
+            } else {
+
+                bgMusic.pause();
+                musicButton.textContent = "🔇";
+
+            }
+        }
+
+        /* DARK MODE ON / OFF */
+        const themeButton = document.getElementById("themeButton");
+        const appElement = document.getElementById("app");
+
+        function toggleDarkMode() {
+            const isDark = appElement.classList.toggle("dark-mode");
+
+            themeButton.textContent = isDark ? "☀️" : "🌙";
+            themeButton.setAttribute(
+                "aria-label",
+                isDark ? "Turn off dark mode" : "Turn on dark mode"
+            );
+        }
+
+    </script>
+</body>
+
+</html>
